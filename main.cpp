@@ -2,9 +2,9 @@
 
 #include <iostream> 
 
-
 int main () {
   MyString str;
+  MyString str4(str);
   MyString str2("helkkkkkkkkkkkkkkkkklkkko");
   MyString str3(std::string("heljjjjjjjjjjjjjjjjldooooo"));
   std::cout << str3 << std::endl;

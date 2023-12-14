@@ -15,16 +15,16 @@ private:
 
   union {
     char string [16];
-    dyn_str* newString;
+    dyn_str* newString {nullptr};
   }optimString;
   
 public:
-  MyString();
+  MyString() = default;
   ~MyString();
+  MyString(const MyString& src);
   MyString(const std::string& std);
   MyString(const char* str);
-  MyString(const MyString& oth);
-  MyString(const MyString&&) = delete;
+  MyString(MyString&& lhs);
   void set_size(int s);
   MyString operator+=(const MyString& src);  
   void app(const MyString& src, char ch) ;
@@ -32,8 +32,8 @@ public:
   MyString operator+=(const char* str);
   MyString operator+=(const char sym);
   MyString operator+ (const MyString& src1);
-  friend std::ostream& operator<< (std::ostream& ostr, const MyString& src);
   friend std::istream& operator>> (std::istream& input, MyString& src);
+  friend std::ostream& operator<< (std::ostream& ostr, const MyString& src);
 
 };
 

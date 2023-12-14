@@ -73,6 +73,22 @@ if (!oth.m_isSmal) {
   }
 }
 
+MyString::MyString(MyString&& lhs) {
+  if (!lhs.m_isSmal) { 
+    optimString.newString = std::move(lhs.optimString.newString);
+    optimString.newString->size = std::move(lhs.optimString.newString->size);
+    optimString.newString->arr = std::move(lhs.optimString.newString->arr); 
+    lhs.optimString.newString->arr = nullptr;
+    lhs.optimString.newString->size = 0;
+    m_isSmal = false;
+  } else {
+      m_isSmal = true;
+      optimString.newString = nullptr;
+
+      std::strcpy(optimString.string, lhs.optimString.string);
+  }
+}
+
 void MyString::set_size(int s) {
   optimString.newString->size = s;
 }
@@ -96,7 +112,7 @@ MyString MyString::operator+=(const MyString& src) {
       delete[] optimString.newString->arr;
       optimString.newString->arr = tmp;
       optimString.newString->size = newSize;
-            m_isSmal = false;
+      m_isSmal = false;
 
     } else {
       int strLen = strlen(src.optimString.string);
@@ -125,11 +141,12 @@ MyString MyString::operator+=(const char* src) {
         ++i;
       }
       int j = 0;
-      while (i < srcSize) {
+      while (j < srcSize) {
         tmp[i] = src[j];
         ++j;
         ++i;
       }
+      tmp[newStrSize] = '\0';
       
       delete[] optimString.newString->arr;
       optimString.newString->arr = tmp;
@@ -172,20 +189,22 @@ MyString MyString::operator+=(const char ch ) {
 
 void MyString::app(const MyString& src, char ch) {
     
-    if (!src.m_isSmal) {
-      int newSize = src.optimString.newString->size + 1;
-      char* tmp = new char[newSize];
+  if (!src.m_isSmal) {
+    int newSize = src.optimString.newString->size + 1;
+    char* tmp = new char[newSize];
 
-      int i = 0;
-      while (i < src.optimString.newString->size) {
-        tmp[i] = src.optimString.newString->arr[i];
-        ++i;
-      }
-      tmp[i] = ch;
-      set_size(newSize);
-      delete [] src.optimString.newString->arr;
-      src.optimString.newString->arr = tmp;
-    } else {
+    int i = 0;
+    while (i < src.optimString.newString->size) {
+      tmp[i] = src.optimString.newString->arr[i];
+      ++i;
+    }
+
+    tmp[i] = ch;
+    set_size(newSize);
+    delete [] src.optimString.newString->arr;
+    src.optimString.newString->arr = tmp;
+
+  } else {
       optimString.string[src.m_gettr] = ch;
     }
     
@@ -211,9 +230,8 @@ std::istream& operator>> (std::istream& istr, MyString& src) {
     src.optimString.newString->size  = 0;
   }
 
-
   while(istr.get(ch)  && !std::isspace(ch)){
-    src.app(src,ch);
+    src += ch;
     ++src.m_gettr;
   }
   return istr;
