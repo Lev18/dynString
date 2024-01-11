@@ -25,9 +25,11 @@ public:
   MyString(const std::string& std);
   MyString(const char* str);
   MyString(MyString&& lhs);
+
   void set_size(int s);
   MyString operator+=(const MyString& src);  
   void app(const MyString& src, char ch) ;
+  MyString operator=(MyString&& lhs);
   MyString operator=(const char* str);
   MyString operator+=(const char* str);
   MyString operator+=(const char sym);
